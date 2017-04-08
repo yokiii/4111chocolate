@@ -8,22 +8,30 @@
 
 
 <body>
-  <h1>Some famous Computer Scientists</h1>
-  <div>{{data}}</div>
+  <h1>Inventory</h1>
+   
 
   <div>
-    {% for n in data %}
-    <div>{{n}}</div>
-    {% endfor %}
+    <p>The amount of number on hand less than 10 <input type="submit" value="Click to check"> </p>
+  </div>
+  <div>{{cnames}}</div>
+
+  <div> <p> --------------------------- </p></div>
+
+  <div>
+    <select>
+    <option value="" disabled="disabled" selected="selected">Please select a type of Chocolate</option>
+    <option value="1">Dark</option>
+    <option value="2">Milk</option>
+    <option value="3">White</option>
+    </select>
   </div>
 
-<p><a href="another">Go to the other page</a></p>
+  <div>{{ctypes}}</div>
 
-<form method="POST" action="/add">
-<p>Name of new computer scientist: <input type="text" name="name"> <input type="submit" value="Add"></p>
-</form>
+
+
+ 
+
 
 </body>
-
-
-</html>
