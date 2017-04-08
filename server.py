@@ -126,6 +126,50 @@ def index():
 ##    cnames.append(result['number_on_hand'])
   numbercursor.close()
 
+  #see chocolates of a certain type
+  kind = request.form.get(['type'])
+  if kind = 'Dark':
+  	kcursor = g.conn.execute("SELECT * FROM chocolate WHERE type = 'dark'")
+  elif kind = 'Milk':
+  	kcursor = g.conn.execute("SELECT * FROM chocolate WHERE type = 'milk'")
+  elif kind = 'White':
+   	kcursor = g.conn.execute("SELECT * FROM chocolate WHERE type = 'white'")
+  entries = []
+  for result in kcursor:
+  	entries.append(result)
+  kcursor.close()
+ 
+  #find the company info of a chocolate by its id
+  cid = request.form.['chocolate_id']
+  cidcursor = g.conn.execute("SELECT * FROM makes WHERE chocolate_id='%s'", cid)
+  cinfos = []
+  for result in cidcursor:
+    cinfos.append(cinfos)
+  cidcursor.close()
+
+  #see incomplete orders
+  incordercursor = g.conn.execute("SELECT * FROM orders WHERE date_delivery_completed IS NOT NULL")
+  incorders = []
+  for result in incorderscursor:
+    incorders.append(result)
+  incordercursor.close()
+
+  #see orders made on a certain day
+  date = request.form['order_date']
+  oondatecursor = g.conn.execute("SELECT * FROM orders WHERE order_date = '%s'", date)
+  oondate = []
+  for result in oondatecursor:
+    oondate.append(result)
+  oondatecursor.close()
+
+  #find order by order number
+  onum = request.form['order_number']
+  onumcursor = g.conn.execute("SELECT * FROM orders WHERE order_number = '%s'", onum)
+  orders = []
+  for result in onumcursor:
+    onum.append(result)
+  onumcursor.close()
+
   #
   # Flask uses Jinja templates, which is an extension to HTML where you can
   # pass data to a template and dynamically generate HTML based on the data
@@ -152,7 +196,7 @@ def index():
   #     <div>{{n}}</div>
   #     {% endfor %}
   #
-  context = dict(cnames = cnames)
+  context = dict(cnames = cnames, ctypes=entries, companys=cinfos, ordersnotc=incorders, todayorders=oondate, specificorder=onum)
 
 
   #
