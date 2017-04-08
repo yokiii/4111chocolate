@@ -34,7 +34,7 @@ app = Flask(__name__, template_folder=tmpl_dir)
 #
 #     DATABASEURI = "postgresql://gravano:foobar@104.196.135.151/proj1part2"
 #
-DATABASEURI = "postgresql://yy2738:0744@104.196.135.151/proj1part2"
+DATABASEURI = "postgresql://yy2738:0744104.196.135.151/proj1part2"
 
 
 #
@@ -46,11 +46,11 @@ engine = create_engine(DATABASEURI)
 # Example of running queries in your database
 # Note that this will probably not work if you already have a table named 'test' in your database, containing meaningful data. This is only an example showing you how to run queries in your database using SQLAlchemy.
 #
-engine.execute("""CREATE TABLE IF NOT EXISTS test (
-  id serial,
-  name text
-);""")
-engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
+##engine.execute("""CREATE TABLE IF NOT EXISTS test (
+##  id serial,
+##  name text
+##);""")
+##engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
 
 
 @app.before_request
@@ -113,11 +113,19 @@ def index():
   #
   # example of a database query
   #
-  cursor = g.conn.execute("SELECT name FROM test")
-  names = []
-  for result in cursor:
-    names.append(result['name'])  # can also be accessed using result[0]
-  cursor.close()
+##  cursor = g.conn.execute("SELECT name FROM test")
+##  names = []
+##  for result in cursor:
+##    names.append(result['name'])  # can also be accessed using result[0]
+##  cursor.close()
+
+  numbercursor = g.conn.execute("SELECT chocolate_name description number_on_hand FROM chocolate WHERE number_on_hand < 10")
+  cnames = []
+  for result in numbercursor:
+    cnames.append(result['chocolate_name'])
+    cnames.append(result['description'])
+    cnames.append(result['number_on_hand'])
+  numbercursor.close()
 
   #
   # Flask uses Jinja templates, which is an extension to HTML where you can
@@ -145,14 +153,14 @@ def index():
   #     <div>{{n}}</div>
   #     {% endfor %}
   #
-  context = dict(data = names)
+  context = dict(cnames = cnames)
 
 
   #
   # render_template looks in the templates/ folder for files.
   # for example, the below file reads template/index.html
   #
-  return render_template("index.html", **context)
+  return render_template("template.html", context)
 
 #
 # This is an example of a different path.  You can see it at:
@@ -162,17 +170,7 @@ def index():
 # Notice that the function name is another() rather than index()
 # The functions for each app.route need to have different names
 #
-@app.route('/another')
-def another():
-  return render_template("another.html")
 
-
-# Example of adding new data to the database
-@app.route('/add', methods=['POST'])
-def add():
-  name = request.form['name']
-  g.conn.execute('INSERT INTO test(name) VALUES (%s)', name)
-  return redirect('/')
 
 
 @app.route('/login')
