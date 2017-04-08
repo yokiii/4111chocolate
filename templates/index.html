@@ -8,26 +8,98 @@
 
 
 <body>
-  <h1>Inventory</h1>
-   
+  <h1>Chocolate Shop Management Inventory System</h1>
+
+
+    <div> <p> --------------------------- </p></div>
+
+     <h3> Stocking and Reorder </h3>
+
+   <div> <p> --------------------------- </p></div>
 
   <div>
-    <p>The amount of number on hand less than 10 <input type="submit" value="Click to check"> </p>
+    <h5>1. Show the amount of number on hand based on one specific chocolate id <input type="text" name="chocolate_id"> <input type="submit" value="Check"> </h5>
+  </div>
+  <div>{{stocks}}</div>
+   
+  <div>
+    <h5>2. The amount of number on hand less than 10 <input type="submit" value="Check"> </h5>
   </div>
   <div>{{cnames}}</div>
 
+  <div>
+    <h5>3. Find the company information for one specific chocolate id <input type="text" name="chocolate_id">  <input type="submit" value="Check"> </h5>
+  </div>
+  <div>{{companys}}</div>
+
+   <div>
+    <h5>4. Show all company contact information for the amount of number on hand of those chocolate less than 10   <input type="submit" value="Check"> </h5>
+  </div>
+  <div>{{reorders}}</div>
+
+   <div>
+    <h5>5. Updating number to reorder and number on hand <input type="text" name="number_to_reorder"> for one specific chocolate id  <input type="text" name="chocolate_id">   <input type="submit" value="Check"> </h5>
+  </div>
+  <div>{{updates}}</div>
+
+
   <div> <p> --------------------------- </p></div>
 
+     <h3> Chocolate Inventory </h3>
+
+  <div> <p> --------------------------- </p></div>
+
+
   <div>
+    <h5> 1. All chocolate information for
     <select>
     <option value="" disabled="disabled" selected="selected">Please select a type of Chocolate</option>
     <option value="1">Dark</option>
     <option value="2">Milk</option>
     <option value="3">White</option>
     </select>
+    </h5>
   </div>
 
   <div>{{ctypes}}</div>
+
+
+  <div>
+    <h5>2. Find the related chocolate information based on one specific bean country <input type="text" name="bean_country">  <input type="submit" value="Check"> </h5>
+  </div>
+  <div>{{cbeans}}</div>
+
+
+  <div> <p> --------------------------- </p></div>
+
+     <h3> Profit and Revenue Inventory </h3>
+
+  <div> <p> --------------------------- </p></div>
+
+
+
+
+
+
+  <div> <p> --------------------------- </p></div>
+
+  <h3> Customer Order Inventory </h3>
+
+   <div> <p> --------------------------- </p></div>
+
+  <div>
+    <h5>  Order History </h5>
+    <div> {{orders}} </div>
+
+    <h5> Order delivery have not completed <input type="submit" value="Check"> </h5>
+    <div> {{ordersnotc}} </div>
+
+    <h5> Order made in one specific date<input type="text" name="order_date"> <input type="submit" value="Check"></h5>
+    <div> {{todayorders}} </div>
+
+    <h5> Check specific order information based on order number <input type="text" name="order_number"> <input type="submit" value="Check"></h5>
+    <div> {{specificorder}} </div>
+  </div>
 
 
 
