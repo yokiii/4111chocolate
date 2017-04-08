@@ -119,12 +119,11 @@ def index():
 ##    names.append(result['name'])  # can also be accessed using result[0]
 ##  cursor.close()
 
-  numbercursor = g.conn.execute("SELECT chocolate_name description number_on_hand FROM chocolate WHERE number_on_hand < 10")
+  numbercursor = g.conn.execute("SELECT * FROM chocolate WHERE number_on_hand < 20")
   cnames = []
   for result in numbercursor:
-    cnames.append(result['chocolate_name'])
-    cnames.append(result['description'])
-    cnames.append(result['number_on_hand'])
+    cnames.append(result)
+##    cnames.append(result['number_on_hand'])
   numbercursor.close()
 
   #
@@ -160,7 +159,7 @@ def index():
   # render_template looks in the templates/ folder for files.
   # for example, the below file reads template/index.html
   #
-  return render_template("template.html", context)
+  return render_template("index.html", **context)
 
 #
 # This is an example of a different path.  You can see it at:
