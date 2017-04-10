@@ -119,6 +119,7 @@ def index():
 ##    names.append(result['name'])  # can also be accessed using result[0]
 ##  cursor.close()
 
+##Stocking and Reorder
   #1. Show the amount of number on hand based on one specific chocolate id
   chocolateid = request.form.['chocolate_id']
   ccursor = g.conn.execute("SELECT * FROM chocolate WHERE chocolate_id='%s'", chocolateid)
@@ -127,16 +128,15 @@ def index():
     cname.append(result)
   ccursor.close()
 
-  #2. The amount of number on hand less than 10
+  #2. The amount of number on hand less than 20
   numbercursor = g.conn.execute("SELECT * FROM chocolate WHERE number_on_hand < 20")
   cnames = []
   for result in numbercursor:
     cnames.append(result)
-##    cnames.append(result['number_on_hand'])
   numbercursor.close()
 
-  #3. find the company info of a chocolate by its id
-  cid = request.form.['chocolate_id']
+  #3. find the company info of a specific chocolate by its id
+  cid = request.form.['c_id']
   cidcursor = g.conn.execute("SELECT * FROM makes WHERE chocolate_id='%s'", cid)
   cinfos = []
   for result in cidcursor:
@@ -144,10 +144,26 @@ def index():
   cidcursor.close()
 
   #4. combinational query
-  
+  less10cursor = g.conn.execute("SELECT chocolate_id, chocolate_name, \
+    company_id, company_name, company_country, phone_number, email FROM chocolates, comapny \
+    WHERE chocolate.number_on_hand < 20")
+  less10info = []
+  for result in less10cursor:
+    less10info.append(result)
+  less10cursor.close()
  
-  #5. updating... no idea how to update. 
+  #5. update the number to reorder of a chocolate
+  chocoid = request.form.['choco_id']
+  updateto = request.form['number_to_reorder']
+  g.conn.execute("UPDATE chocolate SET reorder = TRUE, number_to_reorder = '%s' WHERE choco_id = '%s'", number_to_reorder, choco_id)
+  updatecursor = g.conn.execute("SELECT chocolate_id, chocolate_name, \
+    number_on_hand, number_to_reorder FROM chocolate WHERE chocolate_id='%s'", chocoid)
+  updated = []
+  for result in updatecursor:
+    updated.append(result)
+  updatecursor.close()
 
+##Chocolate Inventory
   #1. see chocolates of a certain type
   kind = request.form.get(['type'])
   if kind = 'Dark':
@@ -169,8 +185,9 @@ def index():
      chocolateinfo.append(result)
    beancursor.close()
   
+##Profit and Revenue Inventory
 
-
+##Customer Order Inventory
   #1. show orders history
   allordercursor =  g.conn.execute("SELECT * FROM orders")
   allorders = []
@@ -227,7 +244,9 @@ def index():
   #     <div>{{n}}</div>
   #     {% endfor %}
   #
-  context = dict(cnames = cnames, cname = stocks, ctypes=entries, companys=cinfos, ordersnotc=incorders, todayorders=oondate, specificorder=onum, allorders = orders, chocolateinfo = cbeans)
+  context = dict(stocks=cname, cnames=cnames, companys=cinfos, reorders=less10info, updates=updated,
+    ctypes=entries, cbeans=chocolateinfo,
+    orders=allorders, ordersnotc=incorders, todayorders=oondate, specificorder=onum)
 
 
   #
