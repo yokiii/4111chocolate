@@ -119,104 +119,77 @@ def index():
 ##    names.append(result['name'])  # can also be accessed using result[0]
 ##  cursor.close()
 
-##Stocking and Reorder
-  #1. Show the amount of number on hand based on one specific chocolate id
-  chocolateid = request.form.['chocolate_id']
-  ccursor = g.conn.execute("SELECT * FROM chocolate WHERE chocolate_id='%s'", chocolateid)
-  cname = []
-  for result in ccursor:
-    cname.append(result)
-  ccursor.close()
 
-  #2. The amount of number on hand less than 20
-  numbercursor = g.conn.execute("SELECT * FROM chocolate WHERE number_on_hand < 20")
-  cnames = []
-  for result in numbercursor:
-    cnames.append(result)
-  numbercursor.close()
-
-  #3. find the company info of a specific chocolate by its id
-  cid = request.form.['c_id']
-  cidcursor = g.conn.execute("SELECT * FROM makes WHERE chocolate_id='%s'", cid)
-  cinfos = []
-  for result in cidcursor:
-    cinfos.append(result)
-  cidcursor.close()
-
-  #4. combinational query
-  less10cursor = g.conn.execute("SELECT chocolate_id, chocolate_name, \
-    company_id, company_name, company_country, phone_number, email FROM chocolates, comapny \
-    WHERE chocolate.number_on_hand < 20")
-  less10info = []
-  for result in less10cursor:
-    less10info.append(result)
-  less10cursor.close()
- 
-  #5. update the number to reorder of a chocolate
-  chocoid = request.form.['choco_id']
-  updateto = request.form['number_to_reorder']
-  g.conn.execute("UPDATE chocolate SET reorder = TRUE, number_to_reorder = '%s' WHERE choco_id = '%s'", number_to_reorder, choco_id)
-  updatecursor = g.conn.execute("SELECT chocolate_id, chocolate_name, \
-    number_on_hand, number_to_reorder FROM chocolate WHERE chocolate_id='%s'", chocoid)
-  updated = []
-  for result in updatecursor:
-    updated.append(result)
-  updatecursor.close()
-
-##Chocolate Inventory
-  #1. see chocolates of a certain type
-  kind = request.form.get(['type'])
-  if kind = 'Dark':
-  	kcursor = g.conn.execute("SELECT * FROM chocolate WHERE type = 'dark'")
-  elif kind = 'Milk':
-  	kcursor = g.conn.execute("SELECT * FROM chocolate WHERE type = 'milk'")
-  elif kind = 'White':
-   	kcursor = g.conn.execute("SELECT * FROM chocolate WHERE type = 'white'")
-  entries = []
-  for result in kcursor:
-  	entries.append(result)
-  kcursor.close()
-
-  #2. Find chocolate information based on specific bean country
-   beancountry = request.form.['bean_country']
-   beancursor = g.conn.execute("SELECT * FROM blend WHERE bean_country='%s'", beancountry)
-   chocolateinfo = []
-   for result in beancursor:
-     chocolateinfo.append(result)
-   beancursor.close()
   
-##Profit and Revenue Inventory
+##
+##  #1. Show the amount of number on hand based on one specific chocolate id
+##  chocolateid = request.form.['chocolate_id']
+##  ccursor = g.conn.execute("SELECT * FROM chocolate WHERE chocolate_id='%s'", chocolateid)
+##  cname = []
+##  for result in ccursor:
+##    cname.append(result)
+##  ccursor.close()
+##
+##  #2. The amount of number on hand less than 10
+##  numbercursor = g.conn.execute("SELECT * FROM chocolate WHERE number_on_hand < 20")
+##  cnames = []
+##  for result in numbercursor:
+##    cnames.append(result)
+####    cnames.append(result['number_on_hand'])
+##  numbercursor.close()
+##
+##  #3. find the company info of a chocolate by its id
+##  cid = request.form.['chocolate_id']
+##  cidcursor = g.conn.execute("SELECT * FROM makes WHERE chocolate_id='%s'", cid)
+##  cinfos = []
+##  for result in cidcursor:
+##    cinfos.append(result)
+##  cidcursor.close()
+##
+##  #4. combinational query
+##  
+## 
+##  #5. updating... no idea how to update. 
+##
+##  #1. see chocolates of a certain type
+##  kind = request.form.get(['type'])
+##  if kind = 'Dark':
+##  	kcursor = g.conn.execute("SELECT * FROM chocolate WHERE type = 'dark'")
+##  elif kind = 'Milk':
+##  	kcursor = g.conn.execute("SELECT * FROM chocolate WHERE type = 'milk'")
+##  elif kind = 'White':
+##   	kcursor = g.conn.execute("SELECT * FROM chocolate WHERE type = 'white'")
+##  entries = []
+##  for result in kcursor:
+##  	entries.append(result)
+##  kcursor.close()
+##
+##  #2. Find chocolate information based on specific bean country
+##   beancountry = request.form.['bean_country']
+##   beancursor = g.conn.execute("SELECT * FROM blend WHERE bean_country='%s'", beancountry)
+##   chocolateinfo = []
+##   for result in beancursor:
+##     chocolateinfo.append(result)
+##   beancursor.close()
+  
 
-##Customer Order Inventory
+
   #1. show orders history
-  allordercursor =  g.conn.execute("SELECT * FROM orders")
+  allordercursor =  g.conn.execute("SELECT order_number, order_date , order_price FROM orders")
   allorders = []
   for result in allordercursor:
-    allorders.append(result)
+    allorders.append(', '.join(unicode(r) for r in result))
   allordercursor.close()
 
   #2. see incomplete orders
-  incordercursor = g.conn.execute("SELECT * FROM orders WHERE date_delivery_completed IS NOT NULL")
+  incorderscursor = g.conn.execute("SELECT order_number, order_date, method_of_delivery, date_of_delivery FROM orders WHERE date_delivery_completed IS NOT NULL")
   incorders = []
   for result in incorderscursor:
-    incorders.append(result)
-  incordercursor.close()
+    incorders.append(', '.join(unicode(r) for r in result))
+  incorderscursor.close()
+  
 
-  #3. see orders made on a certain day
-  date = request.form.['order_date']
-  oondatecursor = g.conn.execute("SELECT * FROM orders WHERE order_date = '%s'", date)
-  oondate = []
-  for result in oondatecursor:
-    oondate.append(result)
-  oondatecursor.close()
 
-  #4. find order by order number
-  onum = request.form.['order_number']
-  onumcursor = g.conn.execute("SELECT * FROM orders WHERE order_number = '%s'", onum)
-  orders = []
-  for result in onumcursor:
-    onum.append(result)
-  onumcursor.close()
 
   #
   # Flask uses Jinja templates, which is an extension to HTML where you can
@@ -244,9 +217,8 @@ def index():
   #     <div>{{n}}</div>
   #     {% endfor %}
   #
-  context = dict(stocks=cname, cnames=cnames, companys=cinfos, reorders=less10info, updates=updated,
-    ctypes=entries, cbeans=chocolateinfo,
-    orders=allorders, ordersnotc=incorders, todayorders=oondate, specificorder=onum)
+  #context = dict(cnames = cnames, cname = stocks, ctypes=entries, companys=cinfos, ordersnotc=incorders, todayorders=oondate, specificorder=onum, allorders = orders, chocolateinfo = cbeans)
+  context = dict(orders = allorders, ordersnotc = incorders)
 
 
   #
@@ -263,6 +235,38 @@ def index():
 # Notice that the function name is another() rather than index()
 # The functions for each app.route need to have different names
 #
+
+#3. see orders made on a certain day
+@app.route('/another', methods=['POST'])
+def dorder():
+  date = request.form['order_date']
+  oondatecursor = g.conn.execute("SELECT order_number, order_date , order_price FROM orders WHERE order_date = %s",date)
+  oondate = []
+  for result in oondatecursor:
+    oondate.append(', '.join(unicode(r) for r in result))
+  oondatecursor.close()
+  context = dict(todayorders = oondate)
+  if len(oondate) > 0:
+    return render_template("another.html", **context)
+  else:
+    return render_template("no.html")
+
+
+####  #4. find order by order number
+##@app.route('/orderinfo', methods=['POST'])
+##def orderinfo():
+##  onumber = request.form['order_number']
+##  onumcursor = g.conn.execute("SELECT * FROM orders WHERE order_number = %d", onumber)
+##  orders = []
+##  for result in onumcursor:
+##    orders.append(', '.join(unicode(r) for r in result))
+##  onumcursor.close()
+##  context = dict(specificorders= orders)
+##  if len(orders) > 0:
+##    return render_template("orderinfo.html", **context)
+##  else:
+##    return render_template("no.html")
+  
 
 
 
