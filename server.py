@@ -110,45 +110,27 @@ def index():
   print request.args
 
 
-  #
-  # example of a database query
-  #
-##  cursor = g.conn.execute("SELECT name FROM test")
-##  names = []
-##  for result in cursor:
-##    names.append(result['name'])  # can also be accessed using result[0]
-##  cursor.close()
 
 
-  
-##
-##  #1. Show the amount of number on hand based on one specific chocolate id
-##  chocolateid = request.form.['chocolate_id']
-##  ccursor = g.conn.execute("SELECT * FROM chocolate WHERE chocolate_id='%s'", chocolateid)
-##  cname = []
-##  for result in ccursor:
-##    cname.append(result)
-##  ccursor.close()
-##
-##  #2. The amount of number on hand less than 10
-##  numbercursor = g.conn.execute("SELECT * FROM chocolate WHERE number_on_hand < 20")
-##  cnames = []
-##  for result in numbercursor:
-##    cnames.append(result)
-####    cnames.append(result['number_on_hand'])
-##  numbercursor.close()
-##
-##  #3. find the company info of a chocolate by its id
-##  cid = request.form.['chocolate_id']
-##  cidcursor = g.conn.execute("SELECT * FROM makes WHERE chocolate_id='%s'", cid)
-##  cinfos = []
-##  for result in cidcursor:
-##    cinfos.append(result)
-##  cidcursor.close()
-##
-##  #4. combinational query
-##  
-## 
+
+  #2. The amount of number on hand less than 20
+  numbercursor = g.conn.execute("SELECT chocolate_id, chocolate_name, type, chocolate_price, number_on_hand, number_to_reorder FROM chocolate WHERE number_on_hand < 20")
+  cnames = []
+  for result in numbercursor:
+    cnames.append(', '.join(unicode(r) for r in result))
+  if len(cnames) == 0:
+    cnames.append("No chocolate number under 20")
+  numbercursor.close()
+
+  #4. Show company contact information for chocolate number under 20
+  companycursor = g.conn.execute("SELECT chocolate.chocolate_name, company.company_name, company.phone_number, company.email FROM chocolate,company,makes WHERE (chocolate.number_on_hand < 20 and chocolate.chocolate_id = makes.chocolate_id) and makes.company_id = company.company_id")
+  companyslist = []
+  for result in companycursor:
+    companyslist.append(', '.join(unicode(r) for r in result))
+  if len(companyslist) == 0:
+    companyslist.append("No chocolate number under 20")
+  companycursor.close()
+ 
 ##  #5. updating... no idea how to update. 
 ##
 ##  #1. see chocolates of a certain type
@@ -220,7 +202,7 @@ def index():
   #     {% endfor %}
   #
   #context = dict(cnames = cnames, cname = stocks, ctypes=entries, companys=cinfos, ordersnotc=incorders, todayorders=oondate, specificorder=onum, allorders = orders, chocolateinfo = cbeans)
-  context = dict(orders = allorders, ordersnotc = incorders)
+  context = dict(cnames = cnames, reorders = companyslist, orders = allorders, ordersnotc = incorders)
 
 
   #
@@ -238,6 +220,39 @@ def index():
 # The functions for each app.route need to have different names
 #
 
+
+#1. Show the amount of number on hand based on one specific chocolate id
+@app.route('/chocolatenumber', methods=['POST'])
+def chocolatenumber():
+  chocolateid = request.form['chocolate_id']
+  ccursor = g.conn.execute("SELECT number_on_hand FROM chocolate WHERE chocolate_id= %s", chocolateid)
+  cname = []
+  for result in ccursor:
+    cname.append(', '.join(unicode(r) for r in result))
+  ccursor.close()
+  context = dict(stocks = cname)
+  if len(cname) > 0:
+    return render_template("chocolatenumber.html", **context)
+  else:
+    return render_template("no.html")
+
+#3. find the company info of a chocolate by its id
+@app.route('/companyinfo', methods=['POST'])
+def companyinfo():
+  cid = request.form['chocolate_id']
+  cidcursor = g.conn.execute("SELECT company.company_id, company.company_name,company.company_country, company.phone_number, company.email FROM makes,company WHERE chocolate_id= %s and makes.company_id = company.company_id", cid)
+  cinfos = []
+  for result in cidcursor:
+    cinfos.append(result)
+  cidcursor.close()
+  context = dict(companys= cinfos)
+  if len(cinfos) > 0:
+    return render_template("cinfo.html", **context)
+  else:
+    return render_template("no.html")
+
+
+
 #3. see orders made on a certain day
 @app.route('/another', methods=['POST'])
 def dorder():
@@ -254,7 +269,7 @@ def dorder():
     return render_template("no.html")
 
 
-##  #4. find order by order number
+#4. find order by order number
 @app.route('/orderinfo', methods=['POST'])
 def orderinfo():
   onumber = request.form['order_number']
