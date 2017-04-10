@@ -1,0 +1,27 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+  <body>
+
+<form method="POST" action="/chocolatenumber">
+  <h5> Number on hand for this specific chocolate id: </h5>
+
+<div>{{stocks}}</div>
+
+</form>
+
+<div>
+    {% for a in stocks %}
+    <div>{{a}}</div>
+    {% endfor %}
+    </div>
+
+
+
+</body>

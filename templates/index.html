@@ -11,31 +11,48 @@
   <h1>Chocolate Shop Management Inventory System</h1>
 
 
-    <div> <p> --------------------------- </p></div>
+    <div> <p> ------------------------------------------------------ </p></div>
 
      <h3> Stocking and Reorder </h3>
 
-   <div> <p> --------------------------- </p></div>
+   <div> <p> ------------------------------------------------------ </p></div>
 
   <div>
+    <form method="POST" action="/chocolatenumber">
     <h5>1. Show the amount of number on hand based on one specific chocolate id <input type="text" name="chocolate_id"> <input type="submit" value="Check"> </h5>
+    </form>
   </div>
-  <div>{{stocks}}</div>
+  
    
   <div>
-    <h5>2. The amount of number on hand less than 10 <input type="submit" value="Check"> </h5>
+    <h5>2. The amount of number on hand less than 20 [chocolate id, chocolate name, type, chocolate price, number on hand, number to reorder] </h5>
   </div>
   <div>{{cnames}}</div>
 
+   <div>
+    {% for b in cnames %}
+    <div>{{b}}</div>
+    {% endfor %}
+    </div>
+
   <div>
+    <form method="POST" action="/companyinfo">
     <h5>3. Find the company information for one specific chocolate id <input type="text" name="chocolate_id">  <input type="submit" value="Check"> </h5>
+    </form>
   </div>
-  <div>{{companys}}</div>
+  
 
    <div>
-    <h5>4. Show all company contact information for the amount of number on hand of those chocolate less than 10   <input type="submit" value="Check"> </h5>
+    <h5>4. Show all company contact information for the amount of number on hand of those chocolate less than 20 [chocolate name, company name, phone number, email]  </h5>
   </div>
+
   <div>{{reorders}}</div>
+
+  <div>
+    {% for c in reorders %}
+    <div>{{c}}</div>
+    {% endfor %}
+    </div>
 
    <div>
     <h5>5. Updating number to reorder and number on hand <input type="text" name="number_to_reorder"> for one specific chocolate id  <input type="text" name="chocolate_id">   <input type="submit" value="Check"> </h5>
@@ -43,20 +60,20 @@
   <div>{{updates}}</div>
 
 
-  <div> <p> --------------------------- </p></div>
+  <div> <p> ------------------------------------------------------ </p></div>
 
      <h3> Chocolate Inventory </h3>
 
-  <div> <p> --------------------------- </p></div>
+  <div> <p> ------------------------------------------------------ </p></div>
 
 
   <div>
     <h5> 1. All chocolate information for
     <select>
-    <option value="" disabled="disabled" selected="selected">Please select a type of Chocolate</option>
-    <option value="1">Dark</option>
-    <option value="2">Milk</option>
-    <option value="3">White</option>
+    <option value="" disabled="disabled" selected="selected" name="0">Please select a type of Chocolate</option>
+    <option value="1" name="1">Dark</option>
+    <option value="2" name="2">Milk</option>
+    <option value="3" name="3">White</option>
     </select>
     </h5>
   </div>
@@ -70,22 +87,22 @@
   <div>{{cbeans}}</div>
 
 
-  <div> <p> --------------------------- </p></div>
+  <div> <p> ------------------------------------------------------ </p></div>
 
      <h3> Profit and Revenue Inventory </h3>
 
-  <div> <p> --------------------------- </p></div>
+  <div> <p> ------------------------------------------------------ </p></div>
 
 
 
 
 
 
-  <div> <p> --------------------------- </p></div>
+  <div> <p> ------------------------------------------------------ </p></div>
 
   <h3> Customer Order Inventory </h3>
 
-   <div> <p> --------------------------- </p></div>
+   <div> <p> ------------------------------------------------------ </p></div>
 
   <div>
     <h5>  1. Order History [Order number, Order Date, Order Price] </h5>

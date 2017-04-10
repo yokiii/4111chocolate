@@ -1,0 +1,27 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+  <body>
+
+<form method="POST" action="/companyinfo">
+  <h5> Specific Company Information for this chocolate: [company id, company name, company country, phone number, email] </h5>
+
+<div>{{companys}}</div>
+
+</form>
+
+<div>
+    {% for c in companys %}
+    <div>{{c}}</div>
+    {% endfor %}
+    </div>
+
+
+
+</body>
