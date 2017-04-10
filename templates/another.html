@@ -1,1 +1,27 @@
-hello, I am another file!
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+  <body>
+
+<form method="POST" action="/another">
+  <h5> Order made in this date: </h5>
+
+<div> {{todayorders}} </div>
+
+</form>
+
+<div>
+    {% for o in todayorders %}
+    <div>{{o}}</div>
+    {% endfor %}
+    </div>
+
+
+
+</body>

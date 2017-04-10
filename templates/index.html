@@ -28,18 +28,17 @@
   <div>{{cnames}}</div>
 
   <div>
-    <h5>3. Find the company information for one specific chocolate id <input type="text" name="c_id">  <input type="submit" value="Check"> </h5>
+    <h5>3. Find the company information for one specific chocolate id <input type="text" name="chocolate_id">  <input type="submit" value="Check"> </h5>
   </div>
   <div>{{companys}}</div>
 
    <div>
-    <h5>4. Show all company contact information for the amount of number on hand of those chocolate less than 20   <input type="submit" value="Check"> </h5>
+    <h5>4. Show all company contact information for the amount of number on hand of those chocolate less than 10   <input type="submit" value="Check"> </h5>
   </div>
   <div>{{reorders}}</div>
 
    <div>
-    <h5>5. Updating number to reorder and number on hand
-      <input type="text" name="number_to_reorder"> for one specific chocolate id  <input type="text" name="choco_id">  <input type="submit" value="Check"> </h5>
+    <h5>5. Updating number to reorder and number on hand <input type="text" name="number_to_reorder"> for one specific chocolate id  <input type="text" name="chocolate_id">   <input type="submit" value="Check"> </h5>
   </div>
   <div>{{updates}}</div>
 
@@ -89,17 +88,35 @@
    <div> <p> --------------------------- </p></div>
 
   <div>
-    <h5>  Order History </h5>
+    <h5>  1. Order History [Order number, Order Date, Order Price] </h5>
     <div> {{orders}} </div>
 
-    <h5> Order delivery have not completed <input type="submit" value="Check"> </h5>
+    <div>
+    {% for n in orders %}
+    <div>{{n}}</div>
+    {% endfor %}
+    </div>
+
+    
+    <h5> 2. Order delivery have not completed  </h5>
     <div> {{ordersnotc}} </div>
+    
 
-    <h5> Order made in one specific date<input type="text" name="order_date"> <input type="submit" value="Check"></h5>
-    <div> {{todayorders}} </div>
+    <div>
+    {% for m in ordersnotc %}
+    <div>{{m}}</div>
+    {% endfor %}
+    </div>
 
-    <h5> Check specific order information based on order number <input type="text" name="order_number"> <input type="submit" value="Check"></h5>
-    <div> {{specificorder}} </div>
+    <form method="POST" action="/another">
+    <h5> 3. Order made in one specific date<input type="text" name="order_date"> <input type="submit" value="Check"></h5>
+    </form>
+
+
+    <form method="POST" action="/orderinfo">
+    <h5> 4. Check specific order information based on order number <input type="text" name="order_number"> <input type="submit" value="Check"></h5>
+    </form>
+
   </div>
 
 
