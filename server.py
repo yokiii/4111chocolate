@@ -179,17 +179,19 @@ def index():
   allorders = []
   for result in allordercursor:
     allorders.append(', '.join(unicode(r) for r in result))
+  if len(allorders) == 0:
+    allorders.append("No order.")
   allordercursor.close()
 
   #2. see incomplete orders
-  incorderscursor = g.conn.execute("SELECT order_number, order_date, method_of_delivery, date_of_delivery FROM orders WHERE date_delivery_completed IS NOT NULL")
+  incorderscursor = g.conn.execute("SELECT order_number, order_date, method_of_delivery, date_of_delivery FROM orders WHERE date_delivery_completed IS NULL")
   incorders = []
   for result in incorderscursor:
     incorders.append(', '.join(unicode(r) for r in result))
+  if len(incorders) == 0:
+    incorders.append("No incomplete order.")
   incorderscursor.close()
   
-
-
 
   #
   # Flask uses Jinja templates, which is an extension to HTML where you can
@@ -252,20 +254,20 @@ def dorder():
     return render_template("no.html")
 
 
-####  #4. find order by order number
-##@app.route('/orderinfo', methods=['POST'])
-##def orderinfo():
-##  onumber = request.form['order_number']
-##  onumcursor = g.conn.execute("SELECT * FROM orders WHERE order_number = %d", onumber)
-##  orders = []
-##  for result in onumcursor:
-##    orders.append(', '.join(unicode(r) for r in result))
-##  onumcursor.close()
-##  context = dict(specificorders= orders)
-##  if len(orders) > 0:
-##    return render_template("orderinfo.html", **context)
-##  else:
-##    return render_template("no.html")
+##  #4. find order by order number
+@app.route('/orderinfo', methods=['POST'])
+def orderinfo():
+  onumber = request.form['order_number']
+  onumcursor = g.conn.execute("SELECT order_number, order_date, method_of_delivery,date_of_delivery,date_delivery_completed,order_price,notes FROM orders WHERE order_number = %s", onumber)
+  orders = []
+  for result in onumcursor:
+    orders.append(', '.join(unicode(r) for r in result))
+  onumcursor.close()
+  context = dict(specificorders= orders)
+  if len(orders) > 0:
+    return render_template("orderinfo.html", **context)
+  else:
+    return render_template("no.html")
   
 
 
