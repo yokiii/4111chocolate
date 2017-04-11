@@ -128,6 +128,32 @@ def index():
   if len(companyslist) == 0:
     companyslist.append("No chocolate number under 20")
   companycursor.close()
+
+#### Profit and Revenue
+
+  
+  
+##  #3.3 Total Profit Gained
+##  tprofitcursor = g.conn.execute("SELECT chocolate.chocolate_name FROM chocolate, sells, item WHERE ()")
+##  total = []
+##  for result in tprofitcursor:
+##    total.append(result)
+##  if len(total) == 0:
+##    total.append("No profit gainning yet")
+##  tprofitcursor.close();
+  
+##  
+##  #3.4 Average profit per order
+##  aprofitcursor = g.conn.execute("SELECT chocolate.chocolate_name FROM chocolate, sells, item WHERE ()")
+##  average = []
+##  for result in aprofitcursor:
+##    average.append(result)
+##  if len(average) == 0:
+##    average.append("There is no order yet")
+##  aprofitcursor.close();
+##  
+
+  
  
 
 ##Orders
@@ -272,13 +298,74 @@ def country():
     INNER JOIN chocolate c ON (c.chocolate_id=bl.chocolate_id) WHERE bs.bean_country=%s", beancountry)
   chocolateinfo = []
   for result in beancursor:
-    chocolateinfo.append(result)
+    chocolateinfo.append(', '.join(unicode(r) for r in result))
   beancursor.close()
   context = dict(chocos = chocolateinfo)
   if len(chocolateinfo) > 0:
     return render_template("country.html", **context)
   else:
     return render_template("no.html")
+  
+#3.1 Popularity of the chocolate
+@app.route('/popular', methods=['POST'])
+def popular():
+  choiceone = request.form.get('chocolatep')
+  choicetwo = request.form.get('chocolatenp')
+ #print choiceone
+  #print choicetwo
+  if (choiceone == "popular" and choicetwo == "npopular"):
+    bpopularcursor = g.conn.execute("SELECT i.chocolate_id, ch.chocolate_name, COUNT(i.chocolate_id) as inxorders \
+                                          FROM item i INNER JOIN chocolate ch ON i.chocolate_id=ch.chocolate_id \
+                                          GROUP BY i.chocolate_id, ch.chocolate_name \
+                                          HAVING COUNT(i.chocolate_id)=(SELECT MAX(countc) \
+                                           FROM (SELECT chocolate_id, count(chocolate_id) AS countc FROM item GROUP BY chocolate_id) AS a);")
+    bpopular = []
+    bpopular.append("The Most Popular one:  ")
+    for result in bpopularcursor:
+      bpopular.append(', '.join(unicode(r) for r in result))
+    bpopularcursor.close()
+    bpopularcursor = g.conn.execute("SELECT i.chocolate_id, ch.chocolate_name, COUNT(i.chocolate_id) as inxorders \
+                                          FROM item i INNER JOIN chocolate ch ON i.chocolate_id=ch.chocolate_id \
+                                          GROUP BY i.chocolate_id, ch.chocolate_name \
+                                          HAVING COUNT(i.chocolate_id)=(SELECT MIN(countc) \
+                                           FROM (SELECT chocolate_id, count(chocolate_id) AS countc FROM item GROUP BY chocolate_id) AS a);")
+    bpopular.append("The Least Popular one: ")
+    for result in bpopularcursor:
+      bpopular.append(', '.join(unicode(r) for r in result))
+    bpopularcursor.close()
+    context = dict(cpopulars = bpopular)
+    return render_template("bpopular.html", **context)
+  else:
+    if (choiceone is None and choicetwo is None):
+      return render_template("noselection.html")
+    else:
+      if (choiceone == "popular" and choicetwo is None):
+        popularcursor = g.conn.execute("SELECT i.chocolate_id, ch.chocolate_name, COUNT(i.chocolate_id) as inxorders \
+                                          FROM item i INNER JOIN chocolate ch ON i.chocolate_id=ch.chocolate_id \
+                                          GROUP BY i.chocolate_id, ch.chocolate_name \
+                                          HAVING COUNT(i.chocolate_id)=(SELECT MAX(countc) \
+                                           FROM (SELECT chocolate_id, count(chocolate_id) AS countc FROM item GROUP BY chocolate_id) AS a);")
+        popular = []
+        for result in popularcursor:
+          popular.append(', '.join(unicode(r) for r in result))
+        popularcursor.close()
+        context = dict(populars = popular)
+        return render_template("popular.html", **context)
+      else:
+        npopularcursor = g.conn.execute("SELECT i.chocolate_id, ch.chocolate_name, COUNT(i.chocolate_id) as inxorders \
+                                          FROM item i INNER JOIN chocolate ch ON i.chocolate_id=ch.chocolate_id \
+                                          GROUP BY i.chocolate_id, ch.chocolate_name \
+                                          HAVING COUNT(i.chocolate_id)=(SELECT MIN(countc) \
+                                           FROM (SELECT chocolate_id, count(chocolate_id) AS countc FROM item GROUP BY chocolate_id) AS a);")
+        npopular = []
+        for result in npopularcursor:
+          npopular.append(', '.join(unicode(r) for r in result))
+        npopularcursor.close()
+        context = dict(npopulars = npopular)
+        return render_template("npopular.html", **context)
+    
+    
+
 
 #4.3. See orders made on a certain day
 @app.route('/another', methods=['POST'])
