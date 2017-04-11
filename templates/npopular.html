@@ -1,0 +1,27 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+  <body>
+
+<form method="POST" action="/popular">
+  <h5> The Least Popular Chocolate in the shop </h5>
+
+<div>{{npopulars}}</div>
+
+</form>
+
+<div>
+    {% for h in npopulars %}
+    <div>{{h}}</div>
+    {% endfor %}
+    </div>
+
+
+
+</body>

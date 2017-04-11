@@ -101,47 +101,25 @@
 
 
 <div>
-     <form action="" method="POST">
+     <form action="/popular" method="POST">
     <h5>1. Most popular chocolate and least popular chocolate in the shop </h5> 
-    <input type="checkbox" name="chocolate" value="popular"> Most Popular one :)<br>
-    <input type="checkbox" name="chocolate" value="npopular"> Least Popular one :(<br>
+    <input type="checkbox" name="chocolatep" value="popular"> Most Popular one :)<br>
+    <input type="checkbox" name="chocolatenp" value="npopular"> Least Popular one :(<br>
     <input type="submit" value="Check"> 
     </form> 
   </div>
 
-  <div>{{cpopulars}}</div>
-
- <div>
-  <h5>2. Most popular chocolate combinations: </h5> 
-  <div> {{combinations}} </div>
-  </div>
-
-    <div>
-    {% for d in combinations %}
-    <div>{{d}}</div>
-    {% endfor %}
-    </div>
+  
 
   <div>
-  <h5>3. Total profit gained </h5> 
+  <h5>2. Total profit gained </h5> 
   <div> {{profits}} </div>
   </div>
 
 <div>
-<h5>4. Average profit per order </h5> 
+<h5>3. Average profit per order </h5> 
 <div> {{avgprofits}} </div>
 </div>
-
- <div>
-  <h5>5. Most Profitable chocolate combinations: </h5> 
-  <div> {{pcombinations}} </div>
-  </div>
-
-   <div>
-    {% for e in pcombinations %}
-    <div>{{e}}</div>
-    {% endfor %}
-    </div>
 
 
 
