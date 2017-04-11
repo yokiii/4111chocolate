@@ -10,22 +10,21 @@
 <body>
   <h1>Chocolate Shop Management Inventory System</h1>
 
-
     <div> <p> ------------------------------------------------------ </p></div>
 
-     <h3> Stocking and Reorder </h3>
+     <h3> Stock and Reorders </h3>
 
    <div> <p> ------------------------------------------------------ </p></div>
 
   <div>
     <form method="POST" action="/chocolatenumber">
-    <h5>1. Show the amount of number on hand based on one specific chocolate id <input type="text" name="chocolate_id"> <input type="submit" value="Check"> </h5>
+    <h5>1. Enter a chocolate id to show the amount you have on hand <input type="text" name="chocolate_id"> <input type="submit" value="Check"> </h5>
     </form>
   </div>
   
    
   <div>
-    <h5>2. The amount of number on hand less than 20 [chocolate id, chocolate name, type, chocolate price, number on hand, number to reorder] </h5>
+    <h5>2. Chocolates where the number on hand is less than 20 [chocolate id, chocolate name, type, chocolate price, number on hand, number to reorder] </h5>
   </div>
   <div>{{cnames}}</div>
 
@@ -37,13 +36,13 @@
 
   <div>
     <form method="POST" action="/companyinfo">
-    <h5>3. Find the company information for one specific chocolate id <input type="text" name="chocolate_id">  <input type="submit" value="Check"> </h5>
+    <h5>3. Enter a chocolate id to show the information of the company that produces it <input type="text" name="chocolate_id">  <input type="submit" value="Check"> </h5>
     </form>
   </div>
   
 
    <div>
-    <h5>4. Show all company contact information for the amount of number on hand of those chocolate less than 20 [chocolate name, company name, phone number, email]  </h5>
+    <h5>4. Company contact information for chocolates where the number on hand is less than 20 [chocolate name, company name, phone number, email]  </h5>
   </div>
 
   <div>{{reorders}}</div>
@@ -54,42 +53,49 @@
     {% endfor %}
     </div>
 
-   <div>
-    <h5>5. Updating number to reorder and number on hand <input type="text" name="number_to_reorder"> for one specific chocolate id  <input type="text" name="chocolate_id">   <input type="submit" value="Check"> </h5>
+  <div>
+    <form method="POST" action="/update">
+    <h5>5. Update how much of a chocolate you will reorder by entering a chocolate id <input type="text" name="chocolate_id"> and the amount you wish to reorder <input type="text" name="number_to_reorder"> <input type="submit" value="Check"> </h5>
+    </form>
   </div>
   <div>{{updates}}</div>
 
 
   <div> <p> ------------------------------------------------------ </p></div>
 
-     <h3> Chocolate Inventory </h3>
+     <h3> Inventory </h3>
 
   <div> <p> ------------------------------------------------------ </p></div>
 
 
   <div>
-    <h5> 1. All chocolate information for
-    <select>
-    <option value="" disabled="disabled" selected="selected" name="0">Please select a type of Chocolate</option>
-    <option value="1" name="1">Dark</option>
-    <option value="2" name="2">Milk</option>
-    <option value="3" name="3">White</option>
+    <form method="POST" action="/typec">
+    <h5> 1. Select a type to show the chocolate information of all chocolates of that type: 
+    <select name = "chtype">
+    <option selected="selected" disabled="disabled">Please select a type of Chocolate</option>
+    <option value="Dark">Dark</option>
+    <option value="Milk">Milk</option>
+    <option value="White">White</option>
     </select>
+    <input type="submit" value="submit">
     </h5>
+    </form>
   </div>
 
   <div>{{ctypes}}</div>
 
 
   <div>
-    <h5>2. Find the related chocolate information based on one specific bean country <input type="text" name="bean_country">  <input type="submit" value="Check"> </h5>
+    <form method="POST" action="/country">
+    <h5>2. Enter a country to find the chocolates made with beans from that country <input type="text" name="bean_country">  <input type="submit" value="Check"> </h5>
+    </form>
   </div>
   <div>{{cbeans}}</div>
 
 
   <div> <p> ------------------------------------------------------ </p></div>
 
-     <h3> Profit and Revenue Inventory </h3>
+     <h3> Profit and Revenue </h3>
 
   <div> <p> ------------------------------------------------------ </p></div>
 
@@ -100,7 +106,7 @@
 
   <div> <p> ------------------------------------------------------ </p></div>
 
-  <h3> Customer Order Inventory </h3>
+  <h3> Orders </h3>
 
    <div> <p> ------------------------------------------------------ </p></div>
 
@@ -115,7 +121,7 @@
     </div>
 
     
-    <h5> 2. Order delivery have not completed [order number, order date, method of delivery, date of delivery]  </h5>
+    <h5> 2. Orders whose delivery have not been completed yet [order number, order date, method of delivery, date of delivery]  </h5>
     <div> {{ordersnotc}} </div>
     
 
@@ -126,12 +132,12 @@
     </div>
 
     <form method="POST" action="/another">
-    <h5> 3. Order made in one specific date<input type="text" name="order_date"> <input type="submit" value="Check"></h5>
+    <h5> 3. Enter a date in MM/DD/YY format to find order placed on that date <input type="text" name="order_date"> <input type="submit" value="Check"></h5>
     </form>
 
 
     <form method="POST" action="/orderinfo">
-    <h5> 4. Check specific order information based on order number <input type="text" name="order_number"> <input type="submit" value="Check"></h5>
+    <h5> 4. Enter an order number to show its order information <input type="text" name="order_number"> <input type="submit" value="Check"></h5>
     </form>
 
   </div>

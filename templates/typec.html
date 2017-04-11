@@ -1,0 +1,27 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+  <body>
+
+<form method="POST" action="/typec">
+  <h5> Chocolates of this type: </h5>
+
+<div> {{typechoco}} </div>
+
+</form>
+
+<div>
+    {% for o in typechoco %}
+    <div>{{o}}</div>
+    {% endfor %}
+    </div>
+
+
+
+</body>

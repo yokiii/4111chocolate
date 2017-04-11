@@ -9,14 +9,13 @@
 
   <body>
 
-<form method="POST" action="/another">
+  <form method="POST" action="/another">
   <h5> Order made in this date: </h5>
 
-<div> {{todayorders}} </div>
+  <div> {{todayorders}} </div>
+  </form>
 
-</form>
-
-<div>
+    <div>
     {% for o in todayorders %}
     <div>{{o}}</div>
     {% endfor %}
@@ -24,4 +23,4 @@
 
 
 
-</body>
+  </body>

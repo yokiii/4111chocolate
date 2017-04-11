@@ -1,0 +1,27 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+  <body>
+
+<form method="POST" action="/country">
+  <h5> Chocolates made with beans from the specified country: </h5>
+
+<div>{{chocos}}</div>
+
+</form>
+
+<div>
+    {% for p in chocos %}
+    <div>{{p}}</div>
+    {% endfor %}
+    </div>
+
+
+
+</body>

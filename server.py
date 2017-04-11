@@ -110,10 +110,8 @@ def index():
   print request.args
 
 
-
-
-
-  #2. The amount of number on hand less than 20
+##Stock and Reorders
+  #1.2. Chocolate where number on hand less than 20
   numbercursor = g.conn.execute("SELECT chocolate_id, chocolate_name, type, chocolate_price, number_on_hand, number_to_reorder FROM chocolate WHERE number_on_hand < 20")
   cnames = []
   for result in numbercursor:
@@ -122,7 +120,7 @@ def index():
     cnames.append("No chocolate number under 20")
   numbercursor.close()
 
-  #4. Show company contact information for chocolate number under 20
+  #1.4. Show company contact information for chocolates where number on hand is under 20
   companycursor = g.conn.execute("SELECT chocolate.chocolate_name, company.company_name, company.phone_number, company.email FROM chocolate,company,makes WHERE (chocolate.number_on_hand < 20 and chocolate.chocolate_id = makes.chocolate_id) and makes.company_id = company.company_id")
   companyslist = []
   for result in companycursor:
@@ -131,33 +129,10 @@ def index():
     companyslist.append("No chocolate number under 20")
   companycursor.close()
  
-##  #5. updating... no idea how to update. 
-##
-##  #1. see chocolates of a certain type
-##  kind = request.form.get(['type'])
-##  if kind = 'Dark':
-##  	kcursor = g.conn.execute("SELECT * FROM chocolate WHERE type = 'dark'")
-##  elif kind = 'Milk':
-##  	kcursor = g.conn.execute("SELECT * FROM chocolate WHERE type = 'milk'")
-##  elif kind = 'White':
-##   	kcursor = g.conn.execute("SELECT * FROM chocolate WHERE type = 'white'")
-##  entries = []
-##  for result in kcursor:
-##  	entries.append(result)
-##  kcursor.close()
-##
-##  #2. Find chocolate information based on specific bean country
-##   beancountry = request.form.['bean_country']
-##   beancursor = g.conn.execute("SELECT * FROM blend WHERE bean_country='%s'", beancountry)
-##   chocolateinfo = []
-##   for result in beancursor:
-##     chocolateinfo.append(result)
-##   beancursor.close()
-  
 
-
-  #1. show orders history
-  allordercursor =  g.conn.execute("SELECT order_number, order_date , order_price FROM orders")
+##Orders
+  #4.1. Show order history
+  allordercursor =  g.conn.execute("SELECT order_number, order_date, order_price FROM orders")
   allorders = []
   for result in allordercursor:
     allorders.append(', '.join(unicode(r) for r in result))
@@ -165,7 +140,7 @@ def index():
     allorders.append("No order.")
   allordercursor.close()
 
-  #2. see incomplete orders
+  #4.2. Show incomplete orders
   incorderscursor = g.conn.execute("SELECT order_number, order_date, method_of_delivery, date_of_delivery FROM orders WHERE date_delivery_completed IS NULL")
   incorders = []
   for result in incorderscursor:
@@ -221,7 +196,7 @@ def index():
 #
 
 
-#1. Show the amount of number on hand based on one specific chocolate id
+#1.1. Show the amount of number on hand based on one specific chocolate id
 @app.route('/chocolatenumber', methods=['POST'])
 def chocolatenumber():
   chocolateid = request.form['chocolate_id']
@@ -236,7 +211,7 @@ def chocolatenumber():
   else:
     return render_template("no.html")
 
-#3. find the company info of a chocolate by its id
+#1.3. Find the company info of a chocolate by its id
 @app.route('/companyinfo', methods=['POST'])
 def companyinfo():
   cid = request.form['chocolate_id']
@@ -251,9 +226,61 @@ def companyinfo():
   else:
     return render_template("no.html")
 
+#1.5. updating db and print out what is updating
+@app.route('/update', methods=['POST'])
+def update():
+  chocolateid = request.form['chocolate_id']
+  reordern = request.form['number_to_reorder']
+  if int(reordern) <= 0:
+    r = "FALSE"
+  else:
+    r = "TRUE"
+  reordercursor = g.conn.execute("UPDATE chocolate SET reorder = %s, number_to_reorder = %s WHERE chocolate_id = %s",r,reordern,chocolateid)
+  reordercursor.close()
+  updatecursor = g.conn.execute("SELECT chocolate_name, number_to_reorder, number_on_hand FROM chocolate WHERE chocolate_id = %s",chocolateid)
+  updateinfo = []
+  for result in updatecursor:
+    updateinfo.append(', '.join(unicode(r) for r in result))
+  updatecursor.close()
+  context = dict(updates = updateinfo)
+  if len(updateinfo) > 0:
+    return render_template("update.html", **context)
+  else:
+    return render_template("no.html")
 
+#2.1. Chocolate information for all chocolates of the selected type
+@app.route('/typec', methods=['POST'])
+def typec():
+  kind = request.form['chtype']
+  kcursor = g.conn.execute("SELECT * FROM chocolate WHERE type = %s", kind)
+  entries = []
+  for result in kcursor:
+  	entries.append(', '.join(unicode(r) for r in result))
+  kcursor.close()
+  context = dict(typechoco = entries)
+  if len(entries) > 0:
+    return render_template("typec.html", **context)
+  else:
+    return render_template("no.html")
 
-#3. see orders made on a certain day
+#2.2. Chocolate information for chocolates made with beans from this country
+@app.route('/country', methods=['POST'])
+def country():
+  beancountry = request.form['bean_country']
+  beancursor = g.conn.execute("SELECT c.chocolate_name, bs.bean_name, bs.bean_country \
+    FROM blend bl INNER JOIN bean_source bs ON (bl.bean_id=bs.bean_id) \
+    INNER JOIN chocolate c ON (c.chocolate_id=bl.chocolate_id) WHERE bs.bean_country=%s", beancountry)
+  chocolateinfo = []
+  for result in beancursor:
+    chocolateinfo.append(result)
+  beancursor.close()
+  context = dict(chocos = chocolateinfo)
+  if len(chocolateinfo) > 0:
+    return render_template("country.html", **context)
+  else:
+    return render_template("no.html")
+
+#4.3. See orders made on a certain day
 @app.route('/another', methods=['POST'])
 def dorder():
   date = request.form['order_date']
@@ -269,7 +296,7 @@ def dorder():
     return render_template("no.html")
 
 
-#4. find order by order number
+#4.4. Find order by order number
 @app.route('/orderinfo', methods=['POST'])
 def orderinfo():
   onumber = request.form['order_number']
