@@ -116,10 +116,22 @@
   <div> {{profits}} </div>
   </div>
 
+  <div>
+    {% for i in profits %}
+    <div>{{i}}</div>
+    {% endfor %}
+    </div>
+
 <div>
-<h5>3. Average profit per order </h5> 
-<div> {{avgprofits}} </div>
+<h5>3. Average revenue per order </h5> 
+<div> {{avgrevenues}} </div>
 </div>
+
+<div>
+    {% for j in avgrevenues %}
+    <div>{{j}}</div>
+    {% endfor %}
+    </div>
 
 
 
