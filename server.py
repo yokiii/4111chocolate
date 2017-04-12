@@ -134,7 +134,8 @@ def index():
   
   
   #3.2 Total Profit Gained
-  tprofitcursor = g.conn.execute("SELECT SUM(chocolate.cost_per_piece * item.quantity) FROM chocolate,item,orders WHERE (item.order_number = orders.order_number)")
+  tprofitcursor = g.conn.execute("SELECT SUM((ch.chocolate_price - ch.cost_per_piece) * i.quantity) FROM chocolate AS ch INNER JOIN \
+                                  item AS i ON ch.chocolate_id = i.chocolate_id;")
   total = []
   for result in tprofitcursor:
     total.append(', '.join(unicode(r) for r in result))
