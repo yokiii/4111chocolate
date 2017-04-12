@@ -133,25 +133,25 @@ def index():
 
   
   
-##  #3.3 Total Profit Gained
-##  tprofitcursor = g.conn.execute("SELECT chocolate.chocolate_name FROM chocolate, sells, item WHERE ()")
-##  total = []
-##  for result in tprofitcursor:
-##    total.append(result)
-##  if len(total) == 0:
-##    total.append("No profit gainning yet")
-##  tprofitcursor.close();
+  #3.2 Total Profit Gained
+  tprofitcursor = g.conn.execute("SELECT SUM(chocolate.cost_per_piece * item.quantity) FROM chocolate,item,orders WHERE (item.order_number = orders.order_number)")
+  total = []
+  for result in tprofitcursor:
+    total.append(', '.join(unicode(r) for r in result))
+  if len(total) == 0:
+    total.append("No profit gainning yet")
+  tprofitcursor.close();
   
-##  
-##  #3.4 Average profit per order
-##  aprofitcursor = g.conn.execute("SELECT chocolate.chocolate_name FROM chocolate, sells, item WHERE ()")
-##  average = []
-##  for result in aprofitcursor:
-##    average.append(result)
-##  if len(average) == 0:
-##    average.append("There is no order yet")
-##  aprofitcursor.close();
-##  
+  
+  #3.3 Average revenue per order
+  arevenuecursor = g.conn.execute("SELECT AVG(orders.order_price) FROM orders")
+  average = []
+  for result in arevenuecursor:
+    average.append(', '.join(unicode(r) for r in result))
+  if len(average) == 0:
+    average.append("There is no order yet")
+  arevenuecursor.close();
+  
 
   
  
@@ -203,7 +203,7 @@ def index():
   #     {% endfor %}
   #
   #context = dict(cnames = cnames, cname = stocks, ctypes=entries, companys=cinfos, ordersnotc=incorders, todayorders=oondate, specificorder=onum, allorders = orders, chocolateinfo = cbeans)
-  context = dict(cnames = cnames, reorders = companyslist, orders = allorders, ordersnotc = incorders)
+  context = dict(cnames = cnames, reorders = companyslist, orders = allorders, ordersnotc = incorders, profits = total, avgrevenues = average)
 
 
   #
